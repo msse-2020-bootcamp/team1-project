@@ -5,6 +5,7 @@ Functions for running Monte Carlo Simulation
 import math
 import os
 import random
+import numpy as np
 
 import matplotlib.pyplot as plt
 
