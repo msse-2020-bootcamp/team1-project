@@ -1,0 +1,8 @@
+import monte_carlo_np as mc
+import os
+
+num_steps = 5000
+
+path = os.path.join('..', 'lj_sample_configurations', 'lj_sample_config_periodic1.txt')
+coords, box_length = mc.read_xyz(path)
+mc.run_simulation(coords, box_length, 3, 1.4, num_steps)
