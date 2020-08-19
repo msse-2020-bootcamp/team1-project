@@ -38,58 +38,26 @@ def calculate_distance(coord1, coord2, box_length=None):
     
     Parameters
     ----------
-    coord1, coord2 : list
-        The atomic coordinates [x, y, z]
-        
-    box_length : float, optional
-        The box length. This function assumes box is a cube.
-        
+    coord1, coord2: list
+        The atomic coordinates
+    
     Returns
     -------
     distance: float
-        The distance between the two atoms
-    
+        The distance between the two points.
     """
-    #Do periodic boundary corrections if given a box_length
-    if box_length is not None:
-        #Distance = sqrt(sum of square differences of each dimension)
-        #initialize the sum of square differences to 0
-        sum_square_diff = 0
-        
-        #Iterate through dimensions
-        for i in range(len(coord1)):
-            
-            #Find the raw distance between the two coordinates in this dimension
-            dim_dist_uncorrected = math.fabs(coord1[i] - coord2[i])
-            
-            #Periodic boundary corrections
-            #If raw distance is less than half the box_length, no corrections are needed
-            if dim_dist_uncorrected <= box_length / 2:
-                dim_dist_corrected = dim_dist_uncorrected
-            
-            #If raw distance is greater than half the box length and less than one whole box length, correct accordingly
-            elif (dim_dist_uncorrected > box_length / 2 and dim_dist_uncorrected <= box_length):
-                dim_dist_corrected = box_length - dim_dist_uncorrected
-            
-            #If raw distance is greater than one whole box length, correct accordingly
-            else:
-                dim_dist_corrected = dim_dist_uncorrected - box_length * round(dim_dist_uncorrected / box_length)
-            
-            #Add the square difference to the total sum
-            sum_square_diff += (dim_dist_corrected)**2
-        
-        #Calculate distance after finding the sum of square differences
-        distance = math.sqrt(sum_square_diff)
-        
-    #Otherwise assume no periodic boundaries    
-    else:
-        sum_square_diff = 0
     
-        for i in range(len(coord1)):
-            sum_square_diff += (coord1[i] - coord2[i])**2
-
-        distance = math.sqrt(sum_square_diff)
-
+    distance = 0
+    for i in range(3):
+        dim_dist = (coord1[i] - coord2[i]) 
+        
+        if box_length:
+            dim_dist = dim_dist - box_length * round(dim_dist / box_length)
+        
+        dim_dist = dim_dist**2
+        distance += dim_dist
+    
+    distance = math.sqrt(distance)
     return distance
 
 def calculate_total_energy(coordinates, box_length, cutoff):
